@@ -1,0 +1,37 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "This is for my NJIT IS117 Final of 2025.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sug3rCooki3/Portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sug3rCooki3/Portfolio/issues"
+  },
+  "homepage": "https://github.com/Sug3rCooki3/Portfolio#readme",
+  "dependencies": {
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.15.1",
+    "@vitejs/plugin-react": "^5.1.2",
+    "htmlhint": "^1.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "stylelint": "^16.26.1",
+    "vite": "^7.2.7"
+  }
+}
