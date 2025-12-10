@@ -151,7 +151,7 @@ function App() {
           border: '2px dashed var(--muted)'
         }}>
           <p style={{ fontWeight: 'bold', marginBottom: '1rem' }}>[Calendly Widget Integration Area]</p>
-          <p>Visitor selects time -> Booking Confirmed -> Auto-Calendar Invite</p>
+          <p>Visitor selects time &rarr; Booking Confirmed &rarr; Auto-Calendar Invite</p>
           <button className="btn btn-primary" style={{ marginTop: '1rem' }}>Book Strategy Call</button>
         </div>
       </section>
