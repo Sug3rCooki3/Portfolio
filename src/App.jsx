@@ -1,14 +1,36 @@
 import React, { useState } from 'react';
+import { PopupModal, InlineWidget } from 'react-calendly';
 
 function App() {
   const [email, setEmail] = useState('');
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState('idle'); // idle, submitting, success, error
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
 
-  const handleLeadMagnetSubmit = (e) => {
+  const handleLeadMagnetSubmit = async (e) => {
     e.preventDefault();
-    // Placeholder for Zapier Webhook
-    console.log('Zapier Webhook Triggered: Send Lead Magnet to', email);
-    alert(`Mission Accepted. The "AI Battlefield Guide" is en route to ${email}.`);
-    setEmail('');
+    if (!privacyAccepted) {
+      alert("Please accept the privacy policy.");
+      return;
+    }
+    setSubmitStatus('submitting');
+
+    // Placeholder Webhook URL - User to replace this
+    const WEBHOOK_URL = 'https://hooks.zapier.com/hooks/catch/123456/abcdef/';
+
+    try {
+      // Simulating API call
+      // const response = await fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify({ email }) });
+      
+      // Mock success for demo
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setSubmitStatus('success');
+      setEmail('');
+    } catch (error) {
+      console.error("Webhook Error:", error);
+      setSubmitStatus('error');
+    }
   };
 
   return (
@@ -19,7 +41,7 @@ function App() {
         <div className="nav-links">
           <a href="#about">About</a>
           <a href="#services">Services</a>
-          <a href="#contact" className="btn-nav">Book Call</a>
+          <button onClick={() => setIsCalendlyOpen(true)} className="btn-nav">Book Call</button>
         </div>
       </nav>
 
@@ -35,7 +57,7 @@ function App() {
             Don't just survive the tech revolution—lead it.
           </p>
           <div className="cta-group">
-            <a href="#contact" className="btn btn-primary" style={{ marginRight: '1rem' }}>Start Your Transformation</a>
+            <button onClick={() => setIsCalendlyOpen(true)} className="btn btn-primary" style={{ marginRight: '1rem' }}>Start Your Transformation</button>
             <a href="#services" className="btn btn-outline">View The Arsenal</a>
           </div>
         </div>
@@ -114,15 +136,38 @@ function App() {
             Not ready to deploy yet? Download my <strong>"AI Battlefield Guide"</strong>—a 5-step checklist to audit your company's AI readiness. It's yours, on the house.
           </p>
           <form onSubmit={handleLeadMagnetSubmit} className="lead-form">
-            <input 
-              type="email" 
-              placeholder="Enter your email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              aria-label="Email Address"
-            />
-            <button type="submit" className="btn btn-primary">Send Me The Intel</button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+                <input 
+                  type="email" 
+                  placeholder="Enter your email" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  aria-label="Email Address"
+                  disabled={submitStatus === 'submitting'}
+                />
+                <button type="submit" className="btn btn-primary" disabled={submitStatus === 'submitting'}>
+                  {submitStatus === 'submitting' ? 'Sending...' : 'Send Me The Intel'}
+                </button>
+              </div>
+              
+              <label style={{ fontSize: '0.8rem', color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <input 
+                  type="checkbox" 
+                  checked={privacyAccepted} 
+                  onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                />
+                I agree to the privacy policy and processing of my data.
+              </label>
+
+              {submitStatus === 'success' && (
+                <p style={{ color: '#4ade80', fontWeight: 'bold' }}>Mission Accepted. Intel is on the way.</p>
+              )}
+              {submitStatus === 'error' && (
+                <p style={{ color: '#ef4444', fontWeight: 'bold' }}>Transmission Failed. Please try again.</p>
+              )}
+            </div>
           </form>
           <p style={{ fontSize: '0.75rem', marginTop: '1rem', opacity: 0.6 }}>
             *Automated via Zapier Webhook. No spam, only strategy.
@@ -140,21 +185,21 @@ function App() {
           Q1 slots are filling fast. Secure your position now.
         </p>
         
-        {/* Calendly Placeholder */}
-        <div className="calendly-placeholder" style={{ 
-          background: 'white', 
-          color: 'black', 
-          padding: '2rem', 
-          borderRadius: '8px', 
-          maxWidth: '600px', 
-          margin: '0 auto',
-          border: '2px dashed var(--muted)'
-        }}>
-          <p style={{ fontWeight: 'bold', marginBottom: '1rem' }}>[Calendly Widget Integration Area]</p>
-          <p>Visitor selects time &rarr; Booking Confirmed &rarr; Auto-Calendar Invite</p>
-          <button className="btn btn-primary" style={{ marginTop: '1rem' }}>Book Strategy Call</button>
+        {/* Calendly Integration */}
+        <div className="calendly-container" style={{ marginTop: '2rem' }}>
+          <InlineWidget 
+            url="https://calendly.com/your-calendly-url" 
+            styles={{ height: '700px' }}
+          />
         </div>
       </section>
+
+      <PopupModal
+        url="https://calendly.com/your-calendly-url"
+        rootElement={document.getElementById("root")}
+        open={isCalendlyOpen}
+        onModalClose={() => setIsCalendlyOpen(false)}
+      />
 
       <footer style={{ textAlign: 'center', padding: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '4rem' }}>
         <p>&copy; 2025 AI Product Engineer. All Rights Reserved.</p>
